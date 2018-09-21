@@ -74,6 +74,25 @@ Vue.mixin({
 let isInitialRoute = true;
 handleMiddlewares();
 
+//验证用户操作Url
+//允许用户刷新页面，重新加载页面
+//禁止用户通过Url进入系统
+router.beforeEach((to, from, next) => {
+    if(from.fullPath=='/'){
+        if(to.fullPath=='/login'){
+            sessionStorage.currentUrl=to.fullPath;
+            next();
+        }else if(sessionStorage.currentUrl==to.fullPath){
+            next();
+        }else{
+            router.push({path:"/login"})
+        }
+    }else{
+        sessionStorage.currentUrl=to.fullPath;
+        next();
+    }
+})
+
 /**
  * When service-worker handles all navigation requests,
  * the same appshell is always served in which condition data should be fetched in client side.

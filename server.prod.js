@@ -7,7 +7,7 @@ var LavasCore = require('lavas-core-vue');
 var express = require('express');
 var app = express();
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 4000;
 
 var core = new LavasCore(__dirname);
 
