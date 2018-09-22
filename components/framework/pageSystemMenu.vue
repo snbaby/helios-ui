@@ -66,7 +66,7 @@
             },
         },
         created() {
-            this.menuTree = this.getMenuTree().filter(item => {
+            this.menuTree = JSON.parse(sessionStorage.getItem('info')).menuTree.filter(item => {
                 return item.id > 10000 && item.appCode == 'soc'
             });
             for (let i = 0; i < this.menuTree.length; i++) {

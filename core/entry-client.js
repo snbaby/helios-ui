@@ -78,6 +78,7 @@ handleMiddlewares();
 //允许用户刷新页面，重新加载页面
 //禁止用户通过Url进入系统
 router.beforeEach((to, from, next) => {
+    console.log('1')
     if(from.fullPath=='/'){
         if(to.fullPath=='/login'){
             sessionStorage.currentUrl=to.fullPath;

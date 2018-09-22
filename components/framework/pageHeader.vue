@@ -21,7 +21,7 @@
                             </div>
                         </div>
                         <div slot="reference" class="logoBox">
-                            <img src="/static/img/base/nav_header.png"/>
+                            <img src="/static/default/img/nav_header.png"/>
                         </div>
                     </el-popover>
                 </div>
@@ -106,7 +106,7 @@
         },
         methods: {
             init() {
-                const data = this.getCurrentUser();
+                const data = JSON.parse(sessionStorage.getItem('info'));
                 this.userInfo.name = data.name;
                 this.userInfo.username = data.username;
                 for (let i in data.groups) {
@@ -194,7 +194,7 @@
     }
 
     .sysName {
-        background-image: url(/static/img/base/login/cf_logo_name_img.png);
+        background-image: url(/static/default/img/logo_name.png);
         background-size: 200px 100%;
         z-index: 1;
         height: 100%;

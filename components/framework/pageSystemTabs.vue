@@ -70,7 +70,7 @@
             }
         },
         created() {
-            this.menus = this.getMenus();
+            this.menus = JSON.parse(sessionStorage.getItem('info')).menus;
             this.menus.forEach((item,index)=>{
                 if(item.uri === this.$route.path){
                     const tab = {

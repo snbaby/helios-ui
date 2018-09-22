@@ -10,7 +10,11 @@ import {createRouter} from '@/.lavas/router';
 import {createStore} from '@/.lavas/store';
 import AppComponent from './App.vue';
 
+import ElementUI from 'element-ui';
+
 Vue.use(Meta);
+
+Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
 
