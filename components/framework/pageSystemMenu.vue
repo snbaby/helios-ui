@@ -1,34 +1,32 @@
 <template>
     <div class="sd-menu">
         <el-menu :default-active="activeIndex" :router="true" active-text-color="#004EA2" mode="horizontal"
-                 @select="handleSelect" :style="'width: '+menuWidth+'px;'" style="">
+                 @select="handleSelect">
             <template v-for="menu1 in menuTree">
-                <el-menu-item :index="menu1.uri" v-if="!menu1.hasOwnProperty('children')">
-                    <img :src="menu1.icon" class="menu-icon" v-if="menu1.icon.length > 0">
-                    <span>{{menu1.menu}}</span>
+                <el-menu-item :index="menu1.path" v-if="menu1.children.length==0">
+                    <span>{{menu1.name}}</span>
                 </el-menu-item>
-                <el-submenu :index="menu1.uri" v-if="menu1.hasOwnProperty('children')">
+                <el-submenu :index="menu1.path" v-if="menu1.children.length>0">
                     <template slot="title">
-                        <img :src="menu1.icon" class="menu-icon" v-if="menu1.icon.length > 0">
-                        <span>{{menu1.menu}}</span>
+                        <span>{{menu1.name}}</span>
                     </template>
                     <template v-for="menu2 in menu1.children">
-                        <el-menu-item :index="menu2.uri" v-if="!menu2.hasOwnProperty('children')">
-                            <span>{{menu2.menu}}</span>
+                        <el-menu-item :index="menu2.path" v-if="menu2.children.length==0">
+                            <span>{{menu2.name}}</span>
                         </el-menu-item>
-                        <el-submenu :index="menu2.uri" v-if="menu2.hasOwnProperty('children')">
+                        <el-submenu :index="menu2.path" v-if="menu2.children.length>0">
                             <template slot="title">
-                                <span>{{menu2.menu}}</span>
+                                <span>{{menu2.name}}</span>
                             </template>
                             <template v-for="menu3 in menu2.children">
-                                <el-menu-item :index="menu3.uri" v-if="!menu3.hasOwnProperty('children')">
-                                    <span>{{menu3.menu}}</span>
+                                <el-menu-item :index="menu3.path" v-if="menu3.children.length==0">
+                                    <span>{{menu3.name}}</span>
                                 </el-menu-item>
-                                <el-submenu :index="menu3.uri" v-if="menu3.hasOwnProperty('children')">
-                                    <template slot="title">{{menu3.menu}}</template>
+                                <el-submenu :index="menu3.path" v-if="menu3.children.length>0">
+                                    <template slot="title">{{menu3.name}}</template>
                                     <template v-for="menu4 in menu3.children">
-                                        <el-menu-item :index="menu4.uri">
-                                            <span>{{menu4.menu}}</span>
+                                        <el-menu-item :index="menu4.path">
+                                            <span>{{menu4.name}}</span>
                                         </el-menu-item>
                                     </template>
                                 </el-submenu>
@@ -47,7 +45,6 @@
             return {
                 activeIndex: '',
                 menuTree: [],
-                menuWidth: 0
             }
         },
         mounted() {
@@ -59,25 +56,13 @@
                 this.activeIndex = this.$route.path;
             }
         },
-        computed: {},
         methods: {
             handleSelect(key) {
                 this.activeIndex = key;
             },
         },
         created() {
-            this.menuTree = JSON.parse(sessionStorage.getItem('info')).menuTree.filter(item => {
-                return item.id > 10000 && item.appCode == 'soc'
-            });
-            for (let i = 0; i < this.menuTree.length; i++) {
-                if (this.menuTree[i].hasOwnProperty("children")) {
-                    this.menuWidth += this.menuTree[i].menu.length * 14 + 60;
-                } else {
-                    this.menuWidth += this.menuTree[i].menu.length * 14 + 40;
-                }
-            }
-            this.menuWidth += this.menuTree.length * 2;
-
+            this.menuTree = JSON.parse(sessionStorage.getItem('menuTree'));
             this.activeIndex = this.$route.path;
         }
     };
