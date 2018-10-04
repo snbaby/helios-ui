@@ -1,0 +1,28 @@
+.sd-bts-line {
+    border-top: 1px #dddddd solid;
+}
+
+.sd-bbs-line{
+    border-bottom: 1px #dddddd solid;
+}
+
+.sd-bls-line {
+    border-left: 1px #dddddd solid;
+}
+
+.sd-brs-line{
+    border-right: 1px #dddddd solid;
+}
+
+.sd-bas-line{
+    border: 1px #dddddd solid;
+    border-radius: 8px;
+}
+
+.sd-pl {
+    padding-left: 30px;
+}
+
+.sd-ta-center {
+    text-align: center;
+}

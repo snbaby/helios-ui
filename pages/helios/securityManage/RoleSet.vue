@@ -50,8 +50,6 @@
                     label: '角色名称',
                     type: 'name',
                 }],
-
-                showData: false,
             }
         },
         created(){

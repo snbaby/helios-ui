@@ -6,3 +6,11 @@ export function menuTree(data) {
         method: 'get'
     })
 }
+
+export function authTree(data) {
+    return fetch({
+        url: '/api/menu/auth-tree',
+        method: 'get',
+        params: data
+    })
+}
