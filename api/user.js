@@ -23,3 +23,10 @@ export function del(data) {
         data: data
     })
 }
+
+export function listUser() {
+    return fetch({
+        url: '/api/user/list',
+        method: 'get'
+    })
+}
