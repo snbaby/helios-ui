@@ -7,6 +7,9 @@
             <page-system-menu></page-system-menu>
         </div>
         <div class="framework-skeleton-content">
+            <div class="framework-skeleton-inner-tabs">
+                <page-system-tabs></page-system-tabs>
+            </div>
             <div class="framework-skeleton-inner-content">
                 <router-view></router-view>
             </div>

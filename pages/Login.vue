@@ -17,7 +17,7 @@
                         {{errorInfo}}
                     </div>
                     <div>
-                        <input v-model="loginForm.userName" placeholder="请输入用户名">
+                        <input v-model="loginForm.code" placeholder="请输入用户名">
                     </div>
                     <div>
                         <input v-model="loginForm.password" type="password" placeholder="请输入密码"
@@ -39,13 +39,16 @@
     import {
         menuTree
     } from '@/api/menu.js';
+    import {
+        login
+    } from '@/api/auth.js';
 
     export default {
         name: 'login',
         data() {
             return {
                 loginForm: {
-                    userName: "",
+                    code: "",
                     password: ""
                 },
                 errorInfo: "",
@@ -54,14 +57,14 @@
         methods: {
             login() {
                 this.errorInfo = '';
-                if (this.loginForm.userName == '') {
+                if (this.loginForm.code == '') {
                     this.errorInfo = '用户名为空';
                 } else if (this.loginForm.password == '') {
                     this.errorInfo = '密码为空';
                 } else {
                     let info = {
                         "id": "208",
-                        "username": "188088",
+                        "code": "188088",
                         "name": "刘毅",
                         "menus": [
                             {
@@ -277,12 +280,22 @@
                         }]
                     };
 
-                    menuTree().then(res=>{
-                        sessionStorage.setItem('menuTree',JSON.stringify(res.content));
+                    // menuTree().then(res=>{
+                    //     sessionStorage.setItem('menuTree',JSON.stringify(res.content));
+                    //     this.$router.push({
+                    //         path: '/helios'
+                    //     });
+                    // });
+
+                    login(this.loginForm).then(res=>{
+                        sessionStorage.setItem('authMenu',JSON.stringify(res.content.authMenu));
+                        sessionStorage.setItem('authMenuTree',JSON.stringify(res.content.authMenuTree));
+                        sessionStorage.setItem('name',res.content.name);
+                        sessionStorage.setItem('code',res.content.code);
                         this.$router.push({
                             path: '/helios'
                         });
-                    });
+                    })
 
                 }
             },

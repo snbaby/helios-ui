@@ -27,6 +27,11 @@ var proxyTable = {
         changeOrigin: true,
         pathRewrite: { '^/api': '/api' }
     },
+    '/auth': {
+        target: 'http://localhost:7000',
+        changeOrigin: true,
+        pathRewrite: { '^/auth': '/auth' }
+    },
 };
 
 var port = process.env.PORT || 4000;

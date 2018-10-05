@@ -62,7 +62,7 @@
             },
         },
         created() {
-            this.menuTree = JSON.parse(sessionStorage.getItem('menuTree'));
+            this.menuTree = JSON.parse(sessionStorage.getItem('authMenuTree'));
             this.activeIndex = this.$route.path;
         }
     };

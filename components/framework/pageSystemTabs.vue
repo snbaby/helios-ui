@@ -33,14 +33,14 @@
                     return;
                 }
                 this.menus.forEach((item,index)=>{
-                    if(item.uri === this.$route.path){
+                    if(item.path === this.$route.path){
                         const tab = {
                             key: item.id,
-                            title: item.menu,
-                            name: item.uri
+                            title: item.name,
+                            name: item.path
                         };
                         this.tabs.push(tab);
-                        this.activeName = item.uri;
+                        this.activeName = item.path;
                     }
                 })
             }
@@ -70,16 +70,16 @@
             }
         },
         created() {
-            this.menus = JSON.parse(sessionStorage.getItem('info')).menus;
+            this.menus = JSON.parse(sessionStorage.getItem('authMenu'));
             this.menus.forEach((item,index)=>{
-                if(item.uri === this.$route.path){
+                if(item.path === this.$route.path){
                     const tab = {
                         key: item.id,
-                        title: item.menu,
-                        name: item.uri
+                        title: item.name,
+                        name: item.path
                     };
                     this.tabs.push(tab);
-                    this.activeName = item.uri;
+                    this.activeName = item.path;
                 }
             })
         }
