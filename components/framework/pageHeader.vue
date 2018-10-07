@@ -106,15 +106,15 @@
         },
         methods: {
             init() {
-                const data = JSON.parse(sessionStorage.getItem('info'));
-                this.userInfo.name = data.name;
-                this.userInfo.username = data.username;
-                for (let i in data.groups) {
-                    if (data.groups[i].type == 2) {
-                        this.userInfo.depName = data.groups[i].name;
-                        break;
-                    }
-                }
+                // const data = JSON.parse(sessionStorage.getItem('info'));
+                // this.userInfo.name = data.name;
+                // this.userInfo.username = data.username;
+                // for (let i in data.groups) {
+                //     if (data.groups[i].type == 2) {
+                //         this.userInfo.depName = data.groups[i].name;
+                //         break;
+                //     }
+                // }
             },
 
             //修改密码
