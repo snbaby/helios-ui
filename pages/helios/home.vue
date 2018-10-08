@@ -1,46 +1,44 @@
 <template>
     <div class="pageContent">
-        <el-col :span="4" >
+        <el-col :span="4">
             <el-row class="marginTop">
                 <el-col :span="9" class="imgGreen"></el-col>
-                <el-col :span="15" >设备正常:1</el-col>
+                <el-col :span="15">设备正常:{{info.normal}}</el-col>
             </el-row>
             <el-row class="marginTop">
                 <el-col :span="9" class="imgRed"></el-col>
-                <el-col :span="15" >设备异常:0</el-col>
+                <el-col :span="15">设备异常:{{info.abNormal}}</el-col>
             </el-row>
             <el-row class="marginTop">
                 <el-col :span="9" class="imgBlue"></el-col>
-                <el-col :span="15">授权离开:0</el-col>
+                <el-col :span="15">授权离开:{{info.leave}}</el-col>
             </el-row>
             <el-row class="marginCenter">
                 <el-col :span="16" class="centerImg">
                 </el-col>
-                <!--<el-col :span="8">-->
-                    <!--<div style="height: 50px;border-bottom: 1px solid;"></div>-->
-                <!--</el-col>-->
             </el-row>
         </el-col>
         <el-col :span="20">
-            <el-row >
-                <span v-for="item,index in cabinetTree" :key="index">
+            <el-row>
+                <span v-for="item,index in info.list" :key="index">
                     <el-col :span="6" class="boxBorder">
-                        <el-row >
-                            <font class="cabinetFont" >{{item.cabinetNumber}}</font>
+                        <el-row>
+                            <font class="cabinetFont">{{item.name}}</font>
                             <el-popover
                                 placement="right"
                                 width="40"
                                 trigger="click">
                                         <div class="chooseText">设备管理</div>
                                         <div class="chooseText">报警管理</div>
-                                        <div class="imgCabinet"  slot="reference"></div>
+                                        <div class="imgCabinet" slot="reference"></div>
                             </el-popover>
                         </el-row>
                         <el-row>
-                            <el-col :span="24%item.sensorMannagement.length/2">&nbsp;</el-col>
-                            <el-col :span="parseInt(24/item.sensorMannagement.length)" v-for="label,index in item.sensorMannagement" :key="index">
+                            <el-col :span="24%item.detectPcList.length/2">&nbsp;</el-col>
+                            <el-col :span="parseInt(24/item.detectPcList.length)"
+                                    v-for="detectPc,index in item.detectPcList" :key="index">
                                 <el-row class="sensorDevice">
-                                    {{label.deviceNumber}}
+                                    {{detectPc.portName}}
                                 </el-row>
                                 <el-row style="height: 39px">
                                     <el-popover
@@ -49,17 +47,17 @@
                                         trigger="click">
                                         <div class="chooseText">设备信息</div>
                                         <div class="chooseText">报警管理</div>
-                                        <div class="imgHostRed" slot="reference" v-if="label.status == 'false'"></div>
-                                        <div class="imgHostGreen" slot="reference" v-if="label.status == 'true'"></div>
-                                        <div class="imgHostGray" slot="reference" v-if="label.status == 'erro'"></div>
-                                        <div class="imgHostBlue" slot="reference" v-if="label.status == 'live'"></div>
+                                        <div class="imgHostRed" slot="reference" v-if="detectPc.status == '1'"></div>
+                                        <div class="imgHostGreen" slot="reference" v-if="detectPc.status == '0'"></div>
+                                        <div class="imgHostGray" slot="reference" v-if="detectPc.status == '2'"></div>
+                                        <!--<div class="imgHostBlue" slot="reference" v-if="detectPc.status == 'live'"></div>-->
                                     </el-popover>
                                 </el-row>
                                 <el-row class="sensorDetector">
-                                    {{label.detectorNumber}}
+                                    {{detectPc.assetName}}
                                 </el-row>
                             </el-col>
-                            <el-col :span="24%item.sensorMannagement.length/2">&nbsp;</el-col>
+                            <el-col :span="24%item.detectPcList.length/2">&nbsp;</el-col>
                         </el-row>
                     </el-col>
                 </span>
@@ -69,276 +67,51 @@
 </template>
 
 <script>
+    import {
+        info
+    } from '@/api/overview.js';
 
     export default {
-        components: {
-        },
+        components: {},
         data() {
             return {
-                hostNum: 4,
-                ws: null,
-                cabinetTree: [{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                },{
-                    cabinetNumber: '0001',
-                    sensorMannagement: [{
-                        status: 'false',
-                        deviceNumber:'W0001',
-                        detectorNumber: '001',
-                    },{
-                        status: 'true',
-                        deviceNumber:'W0001',
-                        detectorNumber: '002',
-                    }]
-                }]
+                info: {
+                    normal: 0,
+                    abNormal: 0,
+                    leave: 0,
+                    list: []
+                }
             }
         },
-        computed: {
-
+        created() {
+            this.init();
         },
         methods: {
-
+            init() {
+                const self = this;
+                setInterval(function () {
+                    info().then(res => {
+                        self.info = res.content;
+                    })
+                },5000);
+            }
         },
-        created() {
 
-        },
-        mounted() {
-
-        },
-        beforeDestroy: function () {
-
-        },
     }
 
 </script>
 
 
 <style lang="css" scoped>
-    .pageContent{
+    .pageContent {
         overflow-x: hidden;
         overflow-y: auto;
         height: 100%;
     }
-    ::-webkit-scrollbar{display:none}
+
+    ::-webkit-scrollbar {
+        display: none
+    }
 
     .sensorDetector {
         margin-bottom: 20px;
@@ -352,43 +125,46 @@
         height: 20px
     }
 
-    .boxBorder{
+    .boxBorder {
         border: 1px solid;
     }
 
-    .imgGreen{
+    .imgGreen {
         background: url("/static/default/img/green.png") right no-repeat;
         height: 20px;
     }
-    .imgRed{
+
+    .imgRed {
         background: url("/static/default/img/red.png") right no-repeat;
         height: 20px;
     }
-    .imgBlue{
+
+    .imgBlue {
         background: url("/static/default/img/blue.png") right no-repeat;
         height: 20px;
     }
-    .marginTop{
+
+    .marginTop {
         margin-top: 20px;
     }
 
-    .centerImg{
+    .centerImg {
         background: url("/static/default/img/center.png") right no-repeat;
         height: 100px;
     }
 
-    .marginCenter{
+    .marginCenter {
         margin-top: 100%;
     }
 
-    .cabinetFont{
+    .cabinetFont {
         line-height: 40px;
         position: absolute;
         margin-left: calc(50% + 23px);
         margin-top: 20px;
     }
 
-    .imgCabinet{
+    .imgCabinet {
         background: url("/static/default/img/cabinet.png");
         height: 49px;
         width: 35px;
@@ -400,7 +176,7 @@
         /*margin-top: 20px;*/
     }
 
-    .imgHostGreen{
+    .imgHostGreen {
         background: url("/static/default/img/hostGreen.png") center no-repeat;
         height: 39px;
         width: 41px;
@@ -408,7 +184,7 @@
         cursor: pointer;
     }
 
-    .imgHostGray{
+    .imgHostGray {
         background: url("/static/default/img/hostGray.png") center no-repeat;
         height: 39px;
         width: 41px;
@@ -416,7 +192,7 @@
         cursor: pointer;
     }
 
-    .imgHostBlue{
+    .imgHostBlue {
         background: url("/static/default/img/hostBlue.png") center no-repeat;
         height: 39px;
         width: 41px;
@@ -424,7 +200,7 @@
         cursor: pointer;
     }
 
-    .imgHostRed{
+    .imgHostRed {
         background: url("/static/default/img/hostRed.png") center no-repeat;
         height: 39px;
         width: 41px;
@@ -432,12 +208,12 @@
         cursor: pointer;
     }
 
-    .imgHostGrey{
+    .imgHostGrey {
         /*background: url("/static/default/img/hostGreen.png") center no-repeat;*/
         height: 39px;
     }
 
-    .chooseText{
+    .chooseText {
         cursor: pointer;
         text-align: center;
         line-height: 30px;
