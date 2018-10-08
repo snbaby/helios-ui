@@ -8,15 +8,8 @@
                 <el-form-item label="编码：">
                     <el-input v-model="searchForm.code" clearable></el-input>
                 </el-form-item>
-                <el-form-item label="侦测器：">
-                    <el-select v-model="searchForm.detectId" filterable placeholder="请选择" clearable>
-                        <el-option
-                            v-for="item in detectList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="IP：">
+                    <el-input v-model="searchForm.ip" clearable></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="search" type="primary">查询</el-button>
@@ -42,8 +35,8 @@
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="port"
-                    label="端口"
+                    prop="ip"
+                    label="IP"
                 >
                 </el-table-column>
                 <el-table-column
@@ -64,24 +57,14 @@
         </div>
         <el-dialog title="新建侦测器" :visible.sync="newDialog">
             <el-form :model="formInline" :rules="rules" ref="formInline">
-                <el-form-item label="侦测器" prop="detectId">
-                    <el-select v-model="formInline.detectId" filterable placeholder="请选择" clearable>
-                        <el-option
-                            v-for="item in detectList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
                 <el-form-item label="名称" prop="name">
                     <el-input v-model="formInline.name" placeholder="名称"></el-input>
                 </el-form-item>
                 <el-form-item label="编码" prop="code">
                     <el-input v-model="formInline.code" placeholder="编码"></el-input>
                 </el-form-item>
-                <el-form-item label="端口" prop="port">
-                    <el-input type="number" v-model="formInline.port" placeholder="端口"></el-input>
+                <el-form-item label="IP" prop="ip">
+                    <el-input v-model="formInline.ip" placeholder="IP"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -95,12 +78,10 @@
 <script>
     import pagination from '@/components/common/pagination.vue';
     import {
-        list
-    } from '@/api/detect.js';
-    import {
         page,
-        add
-    } from '@/api/port.js';
+        add,
+        del
+    } from '@/api/detect.js';
 
     export default {
         components: {
@@ -111,7 +92,7 @@
                 searchForm: {
                     name: "",
                     code: "",
-                    detectId: ""
+                    ip: ""
                 },
                 datas: {
                     pageNum: 1,
@@ -124,54 +105,40 @@
                 formInline: {
                     code: "",
                     name: "",
-                    detectId: "",
-                    port: null
-
+                    ip: ""
                 },
                 rules: {
-                    name: [{
-                        required: true,
-                        message: "名称不能为空",
-                        trigger: "blur"
-                    }],
+                    name: [
+                        {
+                            required: true,
+                            message: "名称不能为空",
+                            trigger: "blur"
+                        }
+                    ],
                     code: [{
                         required: true,
                         message: "编码不能为空",
                         trigger: "blur"
                     }],
-                    detectId: [{
+                    ip: [{
                         required: true,
-                        message: "侦测器不能为空",
-                        trigger: "blur"
-                    }],
-                    port: [{
-                        required: true,
-                        message: "端口不能为空",
+                        message: "IP不能为空",
                         trigger: "blur"
                     }],
                 },
-
-                detectList: [],
             }
         },
         created() {
             this.init();
-            this.getDetectList();
         },
         methods: {
             init() {
                 this.searchForm.name = '';
                 this.searchForm.code = '';
-                this.searchForm.detectId = '';
+                this.searchForm.ip = '';
                 this.datas.pageNum = 1;
 
                 this.queryPage();
-
-            },
-            getDetectList() {
-                list().then(res => {
-                    this.detectList = res.content;
-                })
             },
             search() {
                 this.datas.pageNum = 1;
@@ -182,21 +149,20 @@
                     if (!valid) {
                         return;
                     }
-                    const param = {
-                        name: this.formInline.name,
-                        code: this.formInline.code,
-                        detectId: this.formInline.detectId,
-                        port: this.formInline.port
-                    };
-                    add(param).then(res => {
-                        this.$notify.success({
-                            title: '成功',
-                            message: '新建端口成功'
-                        });
-                        this.init();
-                        this.newDialog = false;
-                    })
                 });
+                const param = {
+                    name: this.formInline.name,
+                    code: this.formInline.code,
+                    ip: this.formInline.ip
+                };
+                add(param).then(res => {
+                    this.$notify.success({
+                        title: '成功',
+                        message: '新建探测器成功'
+                    });
+                    this.init();
+                    this.newDialog = false;
+                })
             },
             pageChange(page) {
                 this.datas.pageNum = page;
@@ -208,7 +174,7 @@
                     pageSize: this.datas.pageSize,
                     name: this.searchForm.name,
                     code: this.searchForm.code,
-                    detectId: this.searchForm.detectId
+                    ip: this.searchForm.ip
                 };
                 page(param).then(res => {
                     this.datas = res.content;
@@ -217,8 +183,7 @@
             openDialog() {
                 this.formInline.code = '';
                 this.formInline.name = '';
-                this.formInline.detectId = '';
-                this.formInline.port = null;
+                this.formInline.ip = '';
 
                 this.newDialog = true;
 
@@ -230,7 +195,7 @@
                 del(param).then(res => {
                     this.$notify.success({
                         title: '成功',
-                        message: '删除端口成功'
+                        message: '删除探测器成功'
                     });
                     this.init();
                 })
