@@ -99,7 +99,8 @@
     } from '@/api/detect.js';
     import {
         page,
-        add
+        add,
+        del
     } from '@/api/port.js';
 
     export default {

@@ -23,3 +23,11 @@ export function del(data) {
         data: data
     })
 }
+
+export function list(param) {
+    return fetch({
+        url: '/api/port/list',
+        method: 'get',
+        params: param
+    })
+}

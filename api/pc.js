@@ -8,3 +8,9 @@ export function page(data) {
     })
 }
 
+export function list() {
+    return fetch({
+        url: '/api/pc/list',
+        method: 'get'
+    })
+}
