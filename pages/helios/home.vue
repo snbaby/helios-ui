@@ -80,7 +80,8 @@
                     abNormal: 0,
                     leave: 0,
                     list: []
-                }
+                },
+                interval: null
             }
         },
         created() {
@@ -89,13 +90,18 @@
         methods: {
             init() {
                 const self = this;
-                setInterval(function () {
+                this.interval = setInterval(function () {
                     info().then(res => {
                         self.info = res.content;
                     })
-                },5000);
+                }, 5000);
             }
         },
+        beforeDestroy() {
+            if (this.interval != null) {
+                clearInterval(this.interval);
+            }
+        }
 
     }
 
