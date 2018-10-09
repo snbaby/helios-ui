@@ -54,7 +54,7 @@
                                     </el-popover>
                                 </el-row>
                                 <el-row class="sensorDetector">
-                                    {{detectPc.assetName}}
+                                    {{detectPc.assetCode}}
                                 </el-row>
                             </el-col>
                             <el-col :span="24%item.detectPcList.length/2">&nbsp;</el-col>

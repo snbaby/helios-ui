@@ -18,18 +18,38 @@
                     width="50">
                 </el-table-column>
                 <el-table-column
-                    prop="assetType"
-                    label="服务器类型"
-                >
-                </el-table-column>
-                <el-table-column
                     prop="assetCode"
                     label="设备编号"
                 >
                 </el-table-column>
                 <el-table-column
+                    prop="assetName"
+                    label="设备名称"
+                >
+                </el-table-column>
+                <el-table-column
                     prop="orgName"
                     label="责任部门"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="assetDutyCode"
+                    label="责任人工号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="assetDutyName"
+                    label="责任人姓名"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="assetType"
+                    label="服务器类型"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="status"
+                    label="设备状态"
                 >
                 </el-table-column>
             </el-table>
@@ -88,7 +108,6 @@
                     pageNum: this.datas.pageNum,
                     pageSize: this.datas.pageSize,
                     assetCode: this.searchForm.assetCode,
-                    assetType: ''
                 };
                 page(param).then(res => {
                     this.datas = res.content;
