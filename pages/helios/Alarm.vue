@@ -3,10 +3,17 @@
         <div class="framework-search-form">
             <el-form :inline="true">
                 <el-form-item label="侦测器：">
-                    <el-input v-model="searchForm.code" clearable></el-input>
+                    <el-select v-model="searchForm.detectId" filterable placeholder="请选择" clearable>
+                        <el-option
+                            v-for="item in detectList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="主机编号：">
-                    <el-input v-model="searchForm.name" clearable></el-input>
+                    <el-input v-model="searchForm.assetCode" clearable></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button class="search" @click="search(1)" type="primary">查询</el-button>
@@ -21,27 +28,75 @@
                     width="50">
                 </el-table-column>
                 <el-table-column
-                    prop="crtCode"
-                    label="用户编号"
+                    prop="detectName"
+                    label="侦测器"
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="crtName"
-                    label="用户名称"
+                    prop="detectCode"
+                    label="侦测器编号"
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="crtTime"
-                    label="操作时间"
+                    prop="portName"
+                    label="端口名"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="portCode"
+                    label="端口编号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="portPort"
+                    label="端口"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="assetName"
+                    label="主机名"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="assetCode"
+                    label="主机编号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="assetDutyName"
+                    label="责任人"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="assetDutyCode"
+                    label="责任人工号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="alarmStatus"
+                    label="状态"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="alarmMessage"
+                    label="处理结果"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="crtTIme"
+                    label="发生时间"
                 >
                     <template slot-scope="scope">
                         {{dateFormat(scope.row.crtTime)}}
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="message"
-                    label="处理事项"
+                    prop="uptTIme"
+                    label="修复时间"
                 >
+                    <template slot-scope="scope">
+                        {{scope.row.uptTime ? dateFormat(scope.row.uptTime):''}}
+                    </template>
                 </el-table-column>
             </el-table>
             <div>
@@ -57,7 +112,11 @@
 
     import {
         page
-    } from '@/api/log.js';
+    } from '@/api/alarm.js';
+
+    import {
+        list
+    } from '@/api/detect.js';
 
 export default {
     name: 'index',
@@ -67,30 +126,37 @@ export default {
     data() {
         return {
             searchForm: {
-                name: "",
-                code: "",
+                assetCode: "",
+                detectId: "",
             },
             datas: {
                 pageNum: 1,
                 pageSize: 10,
                 total: 0,
                 list: []
-            }
+            },
+            detectList: []
         }
     },
     created(){
         this.init();
+        this.getDetectList();
     },
     methods:{
         dateFormat(time) {
             return utils.dateFormat(time, 'yyyy-MM-dd hh:mm:ss');
         },
         init(){
-            this.searchForm.name = '';
-            this.searchForm.code = '';
+            this.searchForm.assetCode = '';
+            this.searchForm.detectId = '';
             this.datas.pageNum = 1;
 
             this.queryPage();
+        },
+        getDetectList() {
+            list().then(res => {
+                this.detectList = res.content;
+            })
         },
         search() {
             this.datas.pageNum = 1;
@@ -104,8 +170,8 @@ export default {
             const param = {
                 pageNum: this.datas.pageNum,
                 pageSize: this.datas.pageSize,
-                name: this.searchForm.name,
-                code: this.searchForm.code
+                assetCode: this.searchForm.assetCode,
+                detectId: this.searchForm.detectId
             };
             page(param).then(res => {
                 this.datas = res.content;
