@@ -76,6 +76,9 @@
                     prop="alarmStatus"
                     label="状态"
                 >
+                    <template slot-scope="scope">
+                        {{convertStatus(scope.row.alarmStatus)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="alarmMessage"
@@ -98,11 +101,42 @@
                         {{scope.row.uptTime ? dateFormat(scope.row.uptTime):''}}
                     </template>
                 </el-table-column>
+                <el-table-column
+                    label="操作"
+                >
+                    <template slot-scope="scope">
+                        <el-button
+                            v-if="scope.row.alarmStatus == '1' "
+                            @click.native.prevent="fixed(scope.row.alarmId)"
+                            type="text"
+                            size="small">
+                            人工修复
+                        </el-button>
+                        <el-button
+                            v-if="scope.row.alarmStatus == '3' "
+                            @click.native.prevent="reback(scope.row.alarmId)"
+                            type="text"
+                            size="small">
+                            返回确认
+                        </el-button>
+                    </template>
+                </el-table-column>
             </el-table>
             <div>
                 <pagination :option="datas" @pageChange="pageChange"></pagination>
             </div>
         </div>
+        <el-dialog title="人工修复" :visible.sync="newDialog">
+            <el-form :model="formInline" :rules="rules" ref="formInline">
+                <el-form-item label="原因" prop="message">
+                    <el-input v-model="formInline.message" placeholder="原因"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="newDialog = false">取 消</el-button>
+                <el-button type="primary" @click="confirm()">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -118,65 +152,95 @@
         list
     } from '@/api/detect.js';
 
-export default {
-    name: 'index',
-    components: {
-        pagination
-    },
-    data() {
-        return {
-            searchForm: {
-                assetCode: "",
-                detectId: "",
-            },
-            datas: {
-                pageNum: 1,
-                pageSize: 10,
-                total: 0,
-                list: []
-            },
-            detectList: []
-        }
-    },
-    created(){
-        this.init();
-        this.getDetectList();
-    },
-    methods:{
-        dateFormat(time) {
-            return utils.dateFormat(time, 'yyyy-MM-dd hh:mm:ss');
+    export default {
+        name: 'index',
+        components: {
+            pagination
         },
-        init(){
-            this.searchForm.assetCode = '';
-            this.searchForm.detectId = '';
-            this.datas.pageNum = 1;
+        data() {
+            return {
+                searchForm: {
+                    assetCode: "",
+                    detectId: "",
+                },
+                datas: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    total: 0,
+                    list: []
+                },
+                detectList: [],
 
-            this.queryPage();
+                newDialog: false,
+                formInline: {
+                    id:"",
+                    message:""
+                },
+                rules: {
+                    message: [
+                        {
+                            required: true,
+                            message: "原因不能为空",
+                            trigger: "blur"
+                        }
+                    ]
+                },
+
+            }
         },
-        getDetectList() {
-            list().then(res => {
-                this.detectList = res.content;
-            })
+        created() {
+            this.init();
+            this.getDetectList();
         },
-        search() {
-            this.datas.pageNum = 1;
-            this.queryPage();
-        },
-        pageChange(page) {
-            this.datas.pageNum = page;
-            this.queryPage();
-        },
-        queryPage() {
-            const param = {
-                pageNum: this.datas.pageNum,
-                pageSize: this.datas.pageSize,
-                assetCode: this.searchForm.assetCode,
-                detectId: this.searchForm.detectId
-            };
-            page(param).then(res => {
-                this.datas = res.content;
-            })
-        },
-    }
-};
+        methods: {
+            dateFormat(time) {
+                return utils.dateFormat(time, 'yyyy-MM-dd hh:mm:ss');
+            },
+            convertStatus(status) {
+                return utils.convertStatus(status);
+            },
+            init() {
+                this.searchForm.assetCode = '';
+                this.searchForm.detectId = '';
+                this.datas.pageNum = 1;
+
+                this.queryPage();
+            },
+            getDetectList() {
+                list().then(res => {
+                    this.detectList = res.content;
+                })
+            },
+            search() {
+                this.datas.pageNum = 1;
+                this.queryPage();
+            },
+            pageChange(page) {
+                this.datas.pageNum = page;
+                this.queryPage();
+            },
+            queryPage() {
+                const param = {
+                    pageNum: this.datas.pageNum,
+                    pageSize: this.datas.pageSize,
+                    assetCode: this.searchForm.assetCode,
+                    detectId: this.searchForm.detectId
+                };
+                page(param).then(res => {
+                    this.datas = res.content;
+                })
+            },
+            fixed(alarmId){
+                this.formInline.id = alarmId;
+                this.formInline.message = "";
+                this.newDialog = true;
+            },
+            reback(alarmId){
+                
+            },
+            confirm(){
+
+            }
+        }
+    };
 </script>
