@@ -47,10 +47,10 @@
                                         trigger="click">
                                         <div class="chooseText">设备信息</div>
                                         <div class="chooseText">报警管理</div>
-                                        <div class="imgHostRed" slot="reference" v-if="detectPc.status == '1'"></div>
                                         <div class="imgHostGreen" slot="reference" v-if="detectPc.status == '0'"></div>
+                                        <div class="imgHostRed" slot="reference" v-if="detectPc.status == '1'"></div>
                                         <div class="imgHostGray" slot="reference" v-if="detectPc.status == '2'"></div>
-                                        <!--<div class="imgHostBlue" slot="reference" v-if="detectPc.status == 'live'"></div>-->
+                                        <div class="imgHostBlue" slot="reference" v-if="detectPc.status == '3'"></div>
                                     </el-popover>
                                 </el-row>
                                 <el-row class="sensorDetector">

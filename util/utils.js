@@ -28,7 +28,7 @@ const dateFormat = (dateObj, dateType) => {
 };
 const convertStatus = (status) => {
     if (status == "0") {
-        return "已修复";
+        return "正常";
     } else if (status == "1") {
         return "异常";
     } else if (status == "2") {

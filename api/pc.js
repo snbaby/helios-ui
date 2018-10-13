@@ -14,3 +14,10 @@ export function list() {
         method: 'get'
     })
 }
+export function rebackConfirm(data) {
+    return fetch({
+        url: '/api/pc/reback-confirm',
+        method: 'post',
+        data: data
+    })
+}

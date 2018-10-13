@@ -51,6 +51,22 @@
                     prop="status"
                     label="设备状态"
                 >
+                    <template slot-scope="scope">
+                        {{convertStatus(scope.row.status)}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    label="操作"
+                >
+                    <template slot-scope="scope">
+                        <el-button
+                            :disabled="scope.row.status != '3'"
+                            @click.native.prevent="rebackConfirm(scope.row.assetCode)"
+                            type="text"
+                            size="small">
+                            确认返回
+                        </el-button>
+                    </template>
                 </el-table-column>
             </el-table>
             <div>
@@ -63,8 +79,10 @@
 <script>
     import pagination from '@/components/common/pagination.vue';
     import {
-        page
+        page,
+        rebackConfirm
     } from '@/api/pc.js';
+    import utils from '@/util/utils';
 
     export default {
         components: {
@@ -85,15 +103,29 @@
                 newUserDialog: false
             }
         },
-        created(){
+        created() {
             this.init();
         },
         methods: {
-            init(){
+            init() {
                 this.searchForm.assetCode = '';
                 this.datas.pageNum = 1;
-
                 this.queryPage();
+            },
+            convertStatus(status) {
+                return utils.convertStatus(status);
+            },
+            rebackConfirm(assetCode) {
+                const param = {
+                    assetCode: assetCode,
+                };
+                rebackConfirm(param).then(res => {
+                    this.$notify.success({
+                        title: '成功',
+                        message: '确认返回成功'
+                    });
+                    this.init();
+                })
             },
             search() {
                 this.datas.pageNum = 1;
