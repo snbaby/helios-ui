@@ -129,7 +129,7 @@
         <el-dialog title="人工修复" :visible.sync="newDialog">
             <el-form :model="formInline" :rules="rules" ref="formInline">
                 <el-form-item label="原因" prop="message">
-                    <el-input v-model="formInline.message" placeholder="原因"></el-input>
+                    <el-input type="textarea" v-model="formInline.message" placeholder="原因"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -145,7 +145,8 @@
     import utils from '@/util/utils';
 
     import {
-        page
+        page,
+        fixed
     } from '@/api/alarm.js';
 
     import {
@@ -173,7 +174,7 @@
 
                 newDialog: false,
                 formInline: {
-                    id:"",
+                    alarmId:"",
                     message:""
                 },
                 rules: {
@@ -231,15 +232,26 @@
                 })
             },
             fixed(alarmId){
-                this.formInline.id = alarmId;
+                this.formInline.alarmId = alarmId;
                 this.formInline.message = "";
                 this.newDialog = true;
             },
             reback(alarmId){
-                
+
             },
             confirm(){
+                const params= {
+                    alarmId : this.formInline.alarmId,
+                    message : this.formInline.message
+                }
 
+                fixed(params).then(res=>{
+                    this.$notify.success({
+                        title: '成功',
+                        message: '修复异常成功'
+                    });
+                    this.newDialog = false;
+                })
             }
         }
     };

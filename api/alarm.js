@@ -7,3 +7,12 @@ export function page(data) {
         data: data
     })
 }
+
+export function fixed(data) {
+    return fetch({
+        url: '/api/alarm/fixed',
+        method: 'post',
+        data: data
+    })
+}
+

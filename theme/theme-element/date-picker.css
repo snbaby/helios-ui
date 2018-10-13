@@ -2592,7 +2592,7 @@
 --------------------------*/
 .el-textarea {
   display: inline-block;
-  width: 100%;
+  width: 150px;
   vertical-align: bottom;
   font-size: 14px; }
   .el-textarea__inner {
