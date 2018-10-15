@@ -23,6 +23,55 @@
 
         <div>
             <el-table :data="datas.list">
+                <el-table-column type="expand">
+                    <template slot-scope="scope">
+                        <el-table :data="scope.row.alarmList">
+                            <el-table-column
+                                type="index"
+                                width="50">
+                            </el-table-column>
+                            <el-table-column
+                                prop="crtTime"
+                                label="报警时间"
+                            >
+                                <template slot-scope="innerScope">
+                                    {{dateFormat(innerScope.row.crtTime)}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="status"
+                                label="状态"
+                            >
+                                <template slot-scope="innerScope">
+                                    {{convertStatus(innerScope.row.status)}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="uptTime"
+                                label="修复时间"
+                            >
+                                <template slot-scope="innerScope">
+                                    {{innerScope.row.uptTime?dateFormat(innerScope.row.uptTime):''}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                prop="uUser.name"
+                                label="修复人"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="uUser.code"
+                                label="修复人工号"
+                            >
+                            </el-table-column>
+                            <el-table-column
+                                prop="message"
+                                label="原因"
+                            >
+                            </el-table-column>
+                        </el-table>
+                    </template>
+                </el-table-column>
                 <el-table-column
                     type="index"
                     width="50">
@@ -79,35 +128,11 @@
                         {{scope.row.alarmList.length}}
                     </template>
                 </el-table-column>
-                <el-table-column
-                    label="操作"
-                >
-                    <template slot-scope="scope">
-                        <el-button
-                            :disabled="scope.row.alarmList.length == 0 "
-                            @click.native.prevent="detail(scope.row.alarmId)"
-                            type="text"
-                            size="small">
-                            查看详情
-                        </el-button>
-                    </template>
-                </el-table-column>
             </el-table>
             <div>
                 <pagination :option="datas" @pageChange="pageChange"></pagination>
             </div>
         </div>
-        <el-dialog title="人工修复" :visible.sync="newDialog">
-            <el-form :model="formInline" :rules="rules" ref="formInline">
-                <el-form-item label="原因" prop="message">
-                    <el-input type="textarea" v-model="formInline.message" placeholder="原因"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="newDialog = false">取 消</el-button>
-                <el-button type="primary" @click="confirm()">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
@@ -200,11 +225,6 @@
                 alarmPage(param).then(res => {
                     this.datas = res.content;
                 })
-            },
-            detail(alarmId) {
-            },
-            confirm() {
-
             }
         }
     };
