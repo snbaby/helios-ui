@@ -12,7 +12,6 @@
                         <div>
                             <div class="userInfo">[姓名]{{userInfo.name}}</div>
                             <div class="userInfo">[工号]{{userInfo.username}}</div>
-                            <div class="userInfo">[部门]{{userInfo.depName}}</div>
                             <div style="text-align: center;cursor: default" class="userInfo userInfoHover"
                                  @click="updata">修改密码
                             </div>
@@ -27,32 +26,28 @@
                 </div>
             </el-col>
         </el-row>
-        <el-dialog title="修改密码" :visible.sync="changePassWordDialog" width="30%" id="changePassWord">
-            <el-form :model="form" status-icon :rules="rules" ref="ruleForm" label-width="100px">
-                <el-form-item label="用户名" prop="username">
-                    <el-input v-model="userInfo.username" :readonly="true" style="width: 100%"></el-input>
-                </el-form-item>
-                <input type="hidden">
+        <el-dialog title="修改密码" :visible.sync="changePassWordDialog">
+            <el-form :model="form" :rules="rules" ref="form">
                 <el-form-item label="原密码" prop="oldPassword">
-                    <el-input type="password" v-model="form.oldPassword"  style="width: 100%"></el-input>
+                    <el-input type="password" v-model="form.oldPassword"></el-input>
                 </el-form-item>
                 <el-form-item label="新密码" prop="newPassword">
-                    <el-input type="password" v-model="form.newPassword"  style="width: 100%"></el-input>
+                    <el-input type="password" v-model="form.newPassword"></el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="checkNewPassword">
-                    <el-input type="password" v-model="form.checkNewPassword"  style="width: 100%"></el-input>
+                    <el-input type="password" v-model="form.checkNewPassword"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="changePassWordDialog = false">取 消</el-button>
-                <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+                <el-button type="primary" @click="confirm()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 
 <script>
-    import {fetch} from '@/core/fetch.js';
+    import {logout, uptPassword} from '@/api/auth.js';
 
     export default {
         name: 'pageHeader',
@@ -81,10 +76,8 @@
                 userInfo: {
                     name: "",
                     username: "",
-                    depName: ""
                 },
                 form: {
-                    username: "",
                     oldPassword: "",
                     newPassword: "",
                     checkNewPassword: ""
@@ -106,65 +99,42 @@
         },
         methods: {
             init() {
-                // const data = JSON.parse(sessionStorage.getItem('info'));
-                // this.userInfo.name = data.name;
-                // this.userInfo.username = data.username;
-                // for (let i in data.groups) {
-                //     if (data.groups[i].type == 2) {
-                //         this.userInfo.depName = data.groups[i].name;
-                //         break;
-                //     }
-                // }
+                this.userInfo.name = sessionStorage.getItem("name");
+                this.userInfo.username = sessionStorage.getItem("code");
             },
 
             //修改密码
             updata() {
                 this.changePassWordDialog = true;
-
+                this.form.oldPassword = "";
+                this.form.newPassword = "";
+                this.form.checkNewPassword = "";
             },
-            submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        this.form.username = this.userInfo.username;
-                        fetch({
-                            "url": '/api/admin/user/update/password',
-                            "data": this.form,
-                            "method": "post"
-                        })
-                            .then((data) => {
-                                if (data.status == '200') {
-                                    this.$alert('密码修改成功！', '提示', {
-                                        confirmButtonText: '确定',
-                                        callback: action => {
-                                            this.$router.push({path: "/login"});
-                                            sessionStorage.setItem("token", "");
-                                            document.cookie = "dun-token=" + "";
-                                        }
-                                    });
-                                } else {
-                                    this.$alert('密码修改失败，用户名或原密码不正确！', '提示', {
-                                        confirmButtonText: '确定',
-                                        callback: action => {
-                                        }
-                                    });
-                                }
-                            });
-                    } else {
-                        return false;
+            confirm() {
+                this.$refs['form'].validate((valid) => {
+                    if (!valid) {
+                        return;
                     }
-                });
+                    uptPassword(this.form).then(res => {
+                        this.$notify.success({
+                            title: '成功',
+                            message: '修改密码成功'
+                        });
+                        this.$router.replace({path: '/login'});
+                    });
+                })
             },
-            //注销
             cancel() {
-                this.$router.replace({path: '/login'});
-                sessionStorage.setItem("token", "");
-                document.cookie = "dun-token=" + "";
+                logout().then(res => {
+                    this.$router.replace({path: '/login'});
+                })
             }
-        },
+        }
+        ,
         created() {
             this.init();
         }
-    };
+    }
 </script>
 
 <style lang="css" scoped>

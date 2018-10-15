@@ -94,7 +94,7 @@
                     info().then(res => {
                         self.info = res.content;
                     })
-                }, 5000);
+                }, 3000);
             }
         },
         beforeDestroy() {

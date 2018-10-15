@@ -7,3 +7,18 @@ export function login(data) {
         data: data
     })
 }
+
+export function logout() {
+    return fetch({
+        url: '/auth/logout',
+        method: 'post'
+    })
+}
+
+export function uptPassword(data) {
+    return fetch({
+        url: '/auth/update-password',
+        method: 'post',
+        data: data
+    })
+}

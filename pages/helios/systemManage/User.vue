@@ -162,20 +162,21 @@
                     if (!valid) {
                         return;
                     }
+                    const param = {
+                        name: this.formInline.name,
+                        code: this.formInline.code,
+                        password: this.formInline.password
+                    };
+                    add(param).then(res=>{
+                        this.$notify.success({
+                            title: '成功',
+                            message: '新建人员成功'
+                        });
+                        this.init();
+                        this.newUserDialog = false;
+                    })
                 });
-                const param = {
-                    name: this.formInline.name,
-                    code: this.formInline.code,
-                    password: this.formInline.password
-                };
-                add(param).then(res=>{
-                    this.$notify.success({
-                        title: '成功',
-                        message: '新建人员成功'
-                    });
-                    this.init();
-                    this.newUserDialog = false;
-                })
+
             },
             pageChange(page) {
                 this.datas.pageNum = page;
