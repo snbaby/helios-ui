@@ -71,7 +71,7 @@
                 }
             };
             return {
-                systemName: '信息安全综合保障系统',
+                systemName: '重要信息设备监控与管理系统',
                 changePassWordDialog: false,
                 userInfo: {
                     name: "",
@@ -176,6 +176,6 @@
         color: #fff;
         position: absolute;
         left: 235px;
-        top: 26%;
+        top: 18px;
     }
 </style>
