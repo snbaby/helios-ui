@@ -2,15 +2,8 @@
     <div class="framework-content">
         <div class="framework-search-form">
             <el-form :inline="true">
-                <el-form-item label="侦测器：">
-                    <el-select v-model="searchForm.detectId" filterable placeholder="请选择" clearable>
-                        <el-option
-                            v-for="item in detectList"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="流程单号：">
+                    <el-input v-model="searchForm.id" clearable></el-input>
                 </el-form-item>
                 <el-form-item label="主机编号：">
                     <el-input v-model="searchForm.assetCode" clearable></el-input>
@@ -28,28 +21,8 @@
                     width="50">
                 </el-table-column>
                 <el-table-column
-                    prop="detectName"
-                    label="侦测器"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="detectCode"
-                    label="侦测器编号"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="portName"
-                    label="端口名"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="portCode"
-                    label="端口编号"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="portPort"
-                    label="端口"
+                    prop="id"
+                    label="流程单号"
                 >
                 </el-table-column>
                 <el-table-column
@@ -73,44 +46,28 @@
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="alarmStatus"
-                    label="状态"
-                >
-                    <template slot-scope="scope">
-                        {{convertStatus(scope.row.alarmStatus)}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="alarmMessage"
-                    label="处理结果"
+                    prop="assetApplyName"
+                    label="申请人"
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="crtTIme"
-                    label="发生时间"
+                    prop="assetApplyCode"
+                    label="申请人工号"
                 >
-                    <template slot-scope="scope">
-                        {{dateFormat(scope.row.crtTime)}}
-                    </template>
                 </el-table-column>
                 <el-table-column
-                    prop="uptTIme"
-                    label="修复时间"
+                    prop="reason"
+                    label="离开原因"
                 >
-                    <template slot-scope="scope">
-                        {{scope.row.uptTime ? dateFormat(scope.row.uptTime):''}}
-                    </template>
                 </el-table-column>
                 <el-table-column
                     label="操作"
                 >
                     <template slot-scope="scope">
                         <el-button
-                            :disabled="scope.row.alarmStatus != '1' "
-                            @click.native.prevent="fixed(scope.row.alarmId)"
                             type="text"
                             size="small">
-                            人工修复
+                            查看详情
                         </el-button>
                     </template>
                 </el-table-column>
@@ -138,9 +95,8 @@
     import utils from '@/util/utils';
 
     import {
-        page,
-        fixed
-    } from '@/api/alarm.js';
+        leavePage
+    } from '@/api/report.js';
 
     import {
         list
@@ -184,26 +140,17 @@
         },
         created() {
             this.init();
-            this.getDetectList();
         },
         methods: {
             dateFormat(time) {
                 return utils.dateFormat(time, 'yyyy-MM-dd hh:mm:ss');
             },
-            convertStatus(status) {
-                return utils.convertStatus(status);
-            },
             init() {
                 this.searchForm.assetCode = '';
-                this.searchForm.detectId = '';
+                this.searchForm.id = '';
                 this.datas.pageNum = 1;
 
                 this.queryPage();
-            },
-            getDetectList() {
-                list().then(res => {
-                    this.detectList = res.content;
-                })
             },
             search() {
                 this.datas.pageNum = 1;
@@ -218,31 +165,16 @@
                     pageNum: this.datas.pageNum,
                     pageSize: this.datas.pageSize,
                     assetCode: this.searchForm.assetCode,
-                    detectId: this.searchForm.detectId
+                    id: this.searchForm.id
                 };
-                page(param).then(res => {
+                leavePage(param).then(res => {
                     this.datas = res.content;
                 })
             },
-            fixed(alarmId) {
-                this.formInline.alarmId = alarmId;
-                this.formInline.message = "";
-                this.newDialog = true;
+            detail(alarmId) {
             },
             confirm() {
-                const params = {
-                    alarmId: this.formInline.alarmId,
-                    message: this.formInline.message
-                }
 
-                fixed(params).then(res => {
-                    this.$notify.success({
-                        title: '成功',
-                        message: '修复异常成功'
-                    });
-                    this.newDialog = false;
-                    this.init();
-                })
             }
         }
     };

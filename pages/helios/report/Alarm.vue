@@ -28,31 +28,6 @@
                     width="50">
                 </el-table-column>
                 <el-table-column
-                    prop="detectName"
-                    label="侦测器"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="detectCode"
-                    label="侦测器编号"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="portName"
-                    label="端口名"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="portCode"
-                    label="端口编号"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="portPort"
-                    label="端口"
-                >
-                </el-table-column>
-                <el-table-column
                     prop="assetName"
                     label="主机名"
                 >
@@ -73,32 +48,35 @@
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="alarmStatus"
-                    label="状态"
-                >
-                    <template slot-scope="scope">
-                        {{convertStatus(scope.row.alarmStatus)}}
-                    </template>
-                </el-table-column>
-                <el-table-column
-                    prop="alarmMessage"
-                    label="处理结果"
+                    prop="detectName"
+                    label="侦测器"
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="crtTIme"
-                    label="发生时间"
+                    prop="detectCode"
+                    label="侦测器编号"
                 >
-                    <template slot-scope="scope">
-                        {{dateFormat(scope.row.crtTime)}}
-                    </template>
                 </el-table-column>
                 <el-table-column
-                    prop="uptTIme"
-                    label="修复时间"
+                    prop="dpName"
+                    label="端口名"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="dpCode"
+                    label="端口编号"
+                >
+                </el-table-column>
+                <el-table-column
+                    prop="dpPort"
+                    label="端口"
+                >
+                </el-table-column>
+                <el-table-column
+                    label="报警次数"
                 >
                     <template slot-scope="scope">
-                        {{scope.row.uptTime ? dateFormat(scope.row.uptTime):''}}
+                        {{scope.row.alarmList.length}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -106,11 +84,11 @@
                 >
                     <template slot-scope="scope">
                         <el-button
-                            v-if="scope.row.alarmStatus == '1' "
-                            @click.native.prevent="fixed(scope.row.alarmId)"
+                            :disabled="scope.row.alarmList.length == 0 "
+                            @click.native.prevent="detail(scope.row.alarmId)"
                             type="text"
                             size="small">
-                            人工修复
+                            查看详情
                         </el-button>
                     </template>
                 </el-table-column>
@@ -138,9 +116,8 @@
     import utils from '@/util/utils';
 
     import {
-        page,
-        fixed
-    } from '@/api/alarm.js';
+        alarmPage
+    } from '@/api/report.js';
 
     import {
         list
@@ -220,29 +197,14 @@
                     assetCode: this.searchForm.assetCode,
                     detectId: this.searchForm.detectId
                 };
-                page(param).then(res => {
+                alarmPage(param).then(res => {
                     this.datas = res.content;
                 })
             },
-            fixed(alarmId) {
-                this.formInline.alarmId = alarmId;
-                this.formInline.message = "";
-                this.newDialog = true;
+            detail(alarmId) {
             },
             confirm() {
-                const params = {
-                    alarmId: this.formInline.alarmId,
-                    message: this.formInline.message
-                }
 
-                fixed(params).then(res => {
-                    this.$notify.success({
-                        title: '成功',
-                        message: '修复异常成功'
-                    });
-                    this.newDialog = false;
-                    this.init();
-                })
             }
         }
     };
