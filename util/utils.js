@@ -34,7 +34,20 @@ const convertStatus = (status) => {
     } else if (status == "2") {
         return "离开";
     } else {
-        return "已返回";
+        return "返回";
     }
 };
-export default {dateFormat, convertStatus};
+const status = [{
+    value: '0',
+    label: '正常'
+}, {
+    value: '1',
+    label: '异常'
+}, {
+    value: '2',
+    label: '离开'
+}, {
+    value: '3',
+    label: '返回'
+}];
+export default {dateFormat, convertStatus, status};

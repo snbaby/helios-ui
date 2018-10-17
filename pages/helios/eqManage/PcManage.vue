@@ -5,6 +5,9 @@
                 <el-form-item label="设备编号：">
                     <el-input v-model="searchForm.assetCode" clearable></el-input>
                 </el-form-item>
+                <el-form-item label="设备状态：">
+                    <el-input v-model="searchForm.assetCode" clearable></el-input>
+                </el-form-item>
                 <el-form-item>
                     <el-button @click="search()" type="primary">查询</el-button>
                 </el-form-item>
@@ -99,7 +102,9 @@
                     total: 0,
                     list: []
                 },
+                status: [{
 
+                }],
                 newUserDialog: false
             }
         },
