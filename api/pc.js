@@ -21,3 +21,10 @@ export function rebackConfirm(data) {
         data: data
     })
 }
+
+export function useableList() {
+    return fetch({
+        url: '/api/pc/list/useable',
+        method: 'get'
+    })
+}

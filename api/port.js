@@ -31,3 +31,11 @@ export function list(param) {
         params: param
     })
 }
+
+export function useableList(param) {
+    return fetch({
+        url: '/api/port/list/useable',
+        method: 'get',
+        params: param
+    })
+}

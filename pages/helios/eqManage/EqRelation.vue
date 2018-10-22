@@ -179,7 +179,6 @@
         created() {
             this.init();
             this.getDetectList();
-            this.getPcList();
         },
         methods: {
             getDetectList() {
@@ -187,20 +186,19 @@
                     this.detectList = res.content;
                 })
             },
-            getPcList(){
-                pc.list().then(res => {
-                    this.assetList = res.content;
-                })
-            },
             detectIdChnage(val){
                 this.portList=[];
+                this.assetList=[];
                 this.formInline.portId='';
                 if(val !==''){
                     const param = {
                        detectId:val
                     }
-                    port.list(param).then(res=>{
+                    port.useableList(param).then(res=>{
                         this.portList = res.content;
+                    })
+                    pc.useableList().then(res => {
+                        this.assetList = res.content;
                     })
                 }
             },
