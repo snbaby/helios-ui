@@ -29,3 +29,11 @@ export function list() {
         url: '/api/detect/list'
     })
 }
+
+export function edit(data) {
+    return fetch({
+        url: '/api/detect/edit',
+        method: 'post',
+        data: data
+    })
+}

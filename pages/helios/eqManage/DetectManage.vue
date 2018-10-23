@@ -48,6 +48,12 @@
                             size="small">
                             删除
                         </el-button>
+                        <el-button
+                            @click.native.prevent="edit(scope.row)"
+                            type="text"
+                            size="small">
+                            修改
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -72,6 +78,21 @@
                 <el-button type="primary" @click="confirm()">确 定</el-button>
             </span>
         </el-dialog>
+
+        <el-dialog title="修改侦测器" :visible.sync="editDialog">
+            <el-form :model="editFormInline" :rules="rules" ref="editFormInline">
+                <el-form-item label="名称" prop="name">
+                    <el-input v-model="editFormInline.name" placeholder="名称"></el-input>
+                </el-form-item>
+                <el-form-item label="IP" prop="ip">
+                    <el-input v-model="editFormInline.ip" placeholder="IP"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editDialog = false">取 消</el-button>
+                <el-button type="primary" @click="editConfirm()">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -80,7 +101,8 @@
     import {
         page,
         add,
-        del
+        del,
+        edit
     } from '@/api/detect.js';
 
     export default {
@@ -102,10 +124,16 @@
                 },
 
                 newDialog: false,
+                editDialog: false,
                 formInline: {
                     code: "",
                     name: "",
                     ip: ""
+                },
+                editFormInline: {
+                    id:"",
+                    name: "",
+                    ip: "",
                 },
                 rules: {
                     name: [
@@ -195,11 +223,38 @@
                 del(param).then(res => {
                     this.$notify.success({
                         title: '成功',
-                        message: '删除探测器成功'
+                        message: '删除侦测器成功'
                     });
                     this.init();
                 })
-            }
+            },
+            edit(row) {
+                this.editFormInline.name = row.name;
+                this.editFormInline.ip = row.ip;
+                this.editFormInline.id = row.id;
+
+                this.editDialog = true;
+            },
+            editConfirm() {
+                this.$refs['editFormInline'].validate((valid) => {
+                    if (!valid) {
+                        return;
+                    }
+                });
+                const param = {
+                    name: this.editFormInline.name,
+                    id: this.editFormInline.id,
+                    ip: this.editFormInline.ip
+                };
+                edit(param).then(res => {
+                    this.$notify.success({
+                        title: '成功',
+                        message: '修改侦测器成功'
+                    });
+                    this.init();
+                    this.editDialog = false;
+                })
+            },
         }
 
     };

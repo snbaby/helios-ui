@@ -18,8 +18,12 @@
         </div>
         <div class="overview_content">
             <div class="overview_content_outline" v-for="item in info.list">
+                <div class="detect_info">
+                    {{item.name}}
+                </div>
                 <div class="detect_outline">
                     <div class="detect">
+
                         <div class="detect_port" v-for="itemPort in item.detectPortList"
                              v-bind:class="getPortClass(itemPort.status)">
                             <div class="detect_description">
@@ -37,10 +41,10 @@
                                 {{itemPc.assetCode}}
                             </div>
                             <div class="pc_info_description mt4">
-                                {{itemPc.assetCode}}
+                                {{itemPc.assetDutyName}}/{{itemPc.assetDutyCode}}
                             </div>
                             <div class="pc_info_description mt4">
-                                {{itemPc.assetCode}}
+                                {{item.name}}/{{itemPc.portName}}
                             </div>
                         </div>
                     </div>
@@ -179,7 +183,7 @@
         padding: 10px;
         border: 1px solid #ebeef5;
         width: 1000px;
-        margin: 0 auto;
+        margin: 10px auto;
     }
 
     .detect_outline {
@@ -242,6 +246,7 @@
         background-color: #edf1fa;
         border: 1px solid #e1e4ec;
         float: left;
+        margin-top: 10px;
     }
 
     .mr8 {
@@ -290,5 +295,12 @@
 
     .mt4 {
         margin-top: 4px;
+    }
+
+    .detect_info{
+        text-align: left;
+        color: #333333;
+        font-family: "Microsoft YaHei";
+        line-height: 30px;
     }
 </style>
