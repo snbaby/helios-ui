@@ -33,11 +33,16 @@ const convertStatus = (status) => {
         return "异常";
     } else if (status == "2") {
         return "离开";
-    } else {
+    } else if (status == "3"){
         return "返回";
+    } else if (status == "-1"){
+        return "待接入";
     }
 };
 const status = [{
+    value: '-1',
+    label: '待接入'
+}, {
     value: '0',
     label: '正常'
 }, {
