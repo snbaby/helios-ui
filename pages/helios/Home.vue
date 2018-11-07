@@ -193,13 +193,14 @@
 
     .detect {
         width: 100%;
-        height: 102px;
+        height: 130px;
         margin-left: 31px;
     }
 
     .detect_port {
 
         height: 100%;
+        width: 24px;
         margin-right: 13px;
         margin-left: 13px;
 
@@ -231,7 +232,7 @@
         color: #ffffff;
         font-family: "Microsoft YaHei";
         text-align: left;
-        padding-top: 78px;
+        padding-top: 95px;
     }
 
     .pc_outline {
