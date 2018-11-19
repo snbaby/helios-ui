@@ -23,12 +23,12 @@ if (process.argv.length >= 3 && process.argv[2] !== 'dev') {
  */
 var proxyTable = {
     '/api': {
-        target: 'http://localhost:7000',
+        target: 'http://192.168.2.32:7000',
         changeOrigin: true,
         pathRewrite: { '^/api': '/api' }
     },
     '/auth': {
-        target: 'http://localhost:7000',
+        target: 'http://192.168.2.32:7000',
         changeOrigin: true,
         pathRewrite: { '^/auth': '/auth' }
     },

@@ -15,6 +15,16 @@
                 <el-form-item label="主机编号：">
                     <el-input v-model="searchForm.assetCode" clearable></el-input>
                 </el-form-item>
+                <el-form-item label="状态：">
+                    <el-select v-model="searchForm.alarmStatus" filterable placeholder="请选择" clearable>
+                        <el-option
+                            v-for="item in statusList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item>
                     <el-button class="search" @click="search(1)" type="primary">查询</el-button>
                 </el-form-item>
@@ -40,21 +50,6 @@
                 <el-table-column
                     prop="portName"
                     label="端口名"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="portCode"
-                    label="端口编号"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="portPort"
-                    label="端口"
-                >
-                </el-table-column>
-                <el-table-column
-                    prop="assetName"
-                    label="主机名"
                 >
                 </el-table-column>
                 <el-table-column
@@ -156,6 +151,7 @@
                 searchForm: {
                     assetCode: "",
                     detectId: "",
+                    alarmStatus: "",
                 },
                 datas: {
                     pageNum: 1,
@@ -164,6 +160,13 @@
                     list: []
                 },
                 detectList: [],
+                statusList: [{
+                    value: '0',
+                    label: '正常'
+                }, {
+                    value: '1',
+                    label: '异常'
+                }],
 
                 newDialog: false,
                 formInline: {
@@ -196,6 +199,7 @@
             init() {
                 this.searchForm.assetCode = '';
                 this.searchForm.detectId = '';
+                this.searchForm.alarmStatus = '';
                 this.datas.pageNum = 1;
 
                 this.queryPage();
@@ -218,7 +222,8 @@
                     pageNum: this.datas.pageNum,
                     pageSize: this.datas.pageSize,
                     assetCode: this.searchForm.assetCode,
-                    detectId: this.searchForm.detectId
+                    detectId: this.searchForm.detectId,
+                    alarmStatus: this.searchForm.alarmStatus
                 };
                 page(param).then(res => {
                     this.datas = res.content;
