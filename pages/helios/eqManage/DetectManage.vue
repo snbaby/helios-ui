@@ -217,15 +217,22 @@
 
             },
             del(row) {
-                const param = {
-                    id: row.id,
-                };
-                del(param).then(res => {
-                    this.$notify.success({
-                        title: '成功',
-                        message: '删除侦测器成功'
-                    });
-                    this.init();
+                const self = this;
+                self.$confirm(`此操作将永久删除侦测器"${row.name}", 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const param = {
+                        id: row.id,
+                    };
+                    del(param).then(res => {
+                        self.$notify.success({
+                            title: '成功',
+                            message: '删除侦测器成功'
+                        });
+                        self.init();
+                    })
                 })
             },
             edit(row) {

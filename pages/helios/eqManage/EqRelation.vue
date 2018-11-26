@@ -55,11 +55,6 @@
                 >
                 </el-table-column>
                 <el-table-column
-                    prop="portCode"
-                    label="端口编号"
-                >
-                </el-table-column>
-                <el-table-column
                     prop="portName"
                     label="端口名称"
                 >
@@ -258,16 +253,23 @@
 
             },
             del(row) {
-                const param = {
-                    id: row.id,
-                };
-                detectPc.del(param).then(res => {
-                    this.$notify.success({
-                        title: '成功',
-                        message: '删除探测器成功'
-                    });
-                    this.init();
-                })
+                const self = this;
+                self.$confirm(`此操作将永久删除关联"${row.detectName}-${row.portName}/${row.assetCode}", 是否继续?`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    const param = {
+                        id: row.id,
+                    };
+                    detectPc.del(param).then(res => {
+                        this.$notify.success({
+                            title: '成功',
+                            message: '删除探测器成功'
+                        });
+                        this.init();
+                    })
+                });
             }
         }
 

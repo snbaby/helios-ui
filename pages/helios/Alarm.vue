@@ -246,7 +246,7 @@
                         message: '修复异常成功'
                     });
                     this.newDialog = false;
-                    this.init();
+                    this.queryPage();
                 })
             }
         }
